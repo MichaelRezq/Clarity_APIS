@@ -3,5 +3,5 @@ from .views import PostListCreateView, PostRetrieveUpdateDeleteView
 
 urlpatterns = [
     path('posts', PostListCreateView.as_view(), name='post_list'),
-    path('post/<int:pk>/', PostRetrieveUpdateDeleteView.as_view(), name='post_detail'),
+    path('posts/<int:pk>/', PostRetrieveUpdateDeleteView.as_view(), name='post_detail'),
 ]

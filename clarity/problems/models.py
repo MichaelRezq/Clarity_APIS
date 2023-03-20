@@ -10,7 +10,7 @@ class Problem(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='problems') # The author of the problem
     created_at = models.DateTimeField(auto_now_add=True) # The date and time the problem was created
     updated_at = models.DateTimeField(auto_now=True) # The date and time the problem was last updated
-    image = models.ImageField(upload_to='problem_images/', null=True, blank=True) # An optional image for the problem
+    image = models.ImageField(upload_to='media/problem_images/', null=True, blank=True) # An optional image for the problem
 
     def __str__(self):
         return self.title

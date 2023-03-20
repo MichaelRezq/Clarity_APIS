@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 # Serializer for Comment model
 class CommentSerializer(serializers.ModelSerializer):
     # Nested serializer for author field
-    author = UserSerializer(read_only=True)
+    # author = UserSerializer(read_only=True)
     class Meta:
         model = Comment
         fields = '__all__'

@@ -6,7 +6,7 @@ from .serializers import CommentReplySerializer, CommentReplyCreateSerializer
 class CommentReplyList(generics.ListCreateAPIView):
     queryset = Reply.objects.all()
     serializer_class = CommentReplySerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = CommentReplyCreateSerializer(data=request.data)
@@ -26,4 +26,4 @@ class CommentReplyList(generics.ListCreateAPIView):
 class CommentReplyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Reply.objects.all()
     serializer_class = CommentReplySerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]

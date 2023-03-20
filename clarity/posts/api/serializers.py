@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     # Nested serializer for author field
-    author = UserSerializer(read_only=True)
+    # author = UserSerializer(read_only=True)
     # Nested serializer for likes field
     likes = UserSerializer(many=True, read_only=True)
     # String representation of tag names
@@ -29,3 +29,13 @@ class PostSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = PostTag
 #         fields = 'all'
+
+
+
+# A serializer is a class in Django REST framework that converts complex data types, 
+# such as Django model instances, 
+# into Python data types that can be easily rendered into JSON, XML or other content types.
+#  It essentially provides a way to convert the data from one format to another,
+#  making it easy to transmit data over the internet in a structured and organized way. 
+# Serializers also handle validating incoming data and deserializing incoming data into complex types,
+#  such as Django model instances.

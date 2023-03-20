@@ -12,9 +12,9 @@ from solutions.models import Solution
 # Serializer for Solution model
 class SolutionSerializer(serializers.ModelSerializer):
     # Nested serializer for problem field
-    problem = ProblemSerializer(read_only=True)
+    # problem = ProblemSerializer(read_only=True)
     # Nested serializer for author field
-    author = UserSerializer(read_only=True)
+    # author = UserSerializer(read_only=True)
     class Meta:
         model = Solution
         fields = '__all__'
