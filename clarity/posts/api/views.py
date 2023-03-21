@@ -1,6 +1,8 @@
 from rest_framework import generics, filters
 from rest_framework.pagination import PageNumberPagination
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import BaseAuthentication,TokenAuthentication
+from permissions import IsAutherOrReadOnly
 from posts.models import Post
 from .serializers import PostSerializer
 
@@ -21,10 +23,13 @@ class PostListCreateView(generics.ListCreateAPIView):
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'content']  # Specify the fields to search
+    ordering_fields = ['title', 'created_at']  # Specify the fields to order by
+    # authentication_classes=[TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
 
 # Retrieve, update or delete a post instance
 class PostRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-
-
+    authentication_classes=[TokenAuthentication]
+    permission_classes = [IsAutherOrReadOnly]

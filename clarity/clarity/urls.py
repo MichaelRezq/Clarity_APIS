@@ -18,13 +18,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path,include
-# from rest_framework import routers
+from rest_framework.authtoken.views import obtain_auth_token
 import posts.api.urls
 import comments.api.urls
 import problems.api.urls
 import solutions.api.urls
 import replays.api.urls
 
+# from rest_framework import routers
 
 # router = routers.DefaultRouter()
 # router.register(r'posts', PostListCreateView)
@@ -40,4 +41,6 @@ urlpatterns = [
     path('', include(problems.api.urls)),
     path('', include(solutions.api.urls)),
     path('', include(replays.api.urls)),
+    path('api_auth', include('rest_framework.urls')),
+    path('api_token_auth', obtain_auth_token),
 ]
