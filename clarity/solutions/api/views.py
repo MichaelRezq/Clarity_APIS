@@ -12,6 +12,8 @@ class SolutionListCreateView(generics.ListCreateAPIView):
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['content']  # Specify the fields to search
+    for i in queryset:
+        print('-------------------------',i.avg_rating)
 
 # Retrieve, update or delete a solution instance
 class SolutionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-mg6s*wfa&6i!2pnw6*@g73my09o(nfmr=&vjjp5k2(d#lk0+9y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -37,8 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
     'rest_framework',
     'rest_framework.authtoken',
+
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+
     'clarity',
     'posts',
     'comments',
@@ -48,6 +61,69 @@ INSTALLED_APPS = [
 
     
 ]
+
+AUTHENTICATION_BACKENDS = (
+    # ...
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+SITE_ID = 1
+
+# EMAIL_BACKEND= 'django.core.mail.backends.console.EmailBackend'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time',
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'en_US',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v12.0',
+    }
+}
+
+
+# SOCIAL_AUTH_FACEBOOK_KEY = 'your-app-id'
+# SOCIAL_AUTH_FACEBOOK_SECRET = 'your-app-secret'
+# SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'id, name, email, first_name, last_name'}
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email'
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online'
+        }
+    }
+}
+# Client_ID = '528493647143-i8b2v3k4aoia0nf2vaqgm8pae1qan7mj.apps.googleusercontent.com'
+# Client_secret = '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'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = Client_ID
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = Client_secret
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['profile', 'email']
+# SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
+#     'access_type': 'offline'
+# }
+# SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/accounts/google/login/callback/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,9 +158,9 @@ WSGI_APPLICATION = 'clarity.wsgi.application'
 
 
 REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#     'rest_framework.permissions.IsAuthenticated'
-#     ],
+    'DEFAULT_PERMISSION_CLASSES': [
+    'rest_framework.permissions.IsAuthenticated'
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
     'rest_framework.authentication.TokenAuthentication',
     ],
@@ -145,7 +221,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL='/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
