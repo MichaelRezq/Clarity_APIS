@@ -29,7 +29,6 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
-# AUTH_USER_MODEL = 'users.CustomUser'
 
 INSTALLED_APPS = [
 
@@ -56,7 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 
-    'users.apps.UsersConfig',
+    'users',
 
     'clarity',
     'posts',
@@ -271,11 +270,12 @@ CORS_ALLOW_HEADERS = [
 
 #  for custmizing the allauth user
 
-# REST_AUTH_REGISTER_SERIALIZERS = {
-#     'REGISTER_SERIALIZER': 'users.api.serializers.CustomRegisterSerializer',
-# }
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.api.serializers.CustomRegisterSerializer',
+}
 
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_UNIQUE_EMAIL = True
 
 
+AUTH_USER_MODEL = 'users.Custom'
