@@ -23,7 +23,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 import posts.api.urls
 import comments.api.urls
 import problems.api.urls
-import solutions.api.urls
+# import solutions.api.urls
 import replays.api.urls
 import SocialAuthentication.urls
 
@@ -41,7 +41,7 @@ urlpatterns = [
     path('', include(posts.api.urls)),
     path('', include(comments.api.urls)),
     path('', include(problems.api.urls)),
-    path('', include(solutions.api.urls)),
+    # path('', include(solutions.api.urls)),
     path('', include(replays.api.urls)),
     path('api_auth', include('rest_framework.urls')),
     path('api_token_auth', obtain_auth_token),

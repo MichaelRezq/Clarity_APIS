@@ -29,8 +29,10 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
+# AUTH_USER_MODEL = 'users.CustomUser'
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,25 +56,39 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 
+    'users.apps.UsersConfig',
+
     'clarity',
     'posts',
     'comments',
     'problems',
     'replays',
-    'solutions'
+    'community',
+    # 'solutions'
     
 ]
+
 
 AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
 SITE_ID = 1
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+# email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # output emails to console for testing
+
+# allauth settings
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-# EMAIL_BACKEND= 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MyApp] '
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
@@ -250,4 +266,16 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+
+
+#  for custmizing the allauth user
+
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'users.api.serializers.CustomRegisterSerializer',
+# }
+
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_UNIQUE_EMAIL = True
+
 
