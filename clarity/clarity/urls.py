@@ -21,11 +21,15 @@ from django.urls import path,include,re_path
 
 from rest_framework.authtoken.views import obtain_auth_token
 import posts.api.urls
+import users.api.urls
 import comments.api.urls
+import community.api.urls
 import problems.api.urls
 # import solutions.api.urls
 import replays.api.urls
 import SocialAuthentication.urls
+from django.conf import settings
+from django.conf.urls.static import static
 
 # from rest_framework import routers
 
@@ -40,12 +44,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(posts.api.urls)),
     path('', include(comments.api.urls)),
+    path('', include(community.api.urls)),
     path('', include(problems.api.urls)),
     # path('', include(solutions.api.urls)),
     path('', include(replays.api.urls)),
     path('api_auth', include('rest_framework.urls')),
     path('api_token_auth', obtain_auth_token),
     path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('', include(users.api.urls)),
     path('', include(SocialAuthentication.urls)),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

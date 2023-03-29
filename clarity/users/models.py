@@ -34,10 +34,6 @@ class CustomAccountManager(BaseUserManager):
 
 # Create your models here.
 class Custom(AbstractBaseUser, PermissionsMixin):
-    # user = models.OneToOneField(User,on_delete=models.CASCADE)
-    # phone = models.CharField(max_length=20)
-    # photo = models.ImageField(upload_to='users/images')
-
     phone_regex = RegexValidator(
         regex=r'^01[1|0|2|5][0-9]{8}$', message='phone must be an egyptian phone number...',)
     username = models.CharField(
@@ -50,10 +46,10 @@ class Custom(AbstractBaseUser, PermissionsMixin):
                               null=False, max_length=150, unique=True)
     phone = models.CharField(verbose_name="phone", null=True, validators=[
                              phone_regex], max_length=14)
-    photo = models.ImageField(verbose_name="photo", upload_to='users/images')
+    photo = models.ImageField(verbose_name="photo", upload_to='users/images',null=True,blank=True)
     community = models.ForeignKey(Community, on_delete=models.SET_NULL,null=True,blank=True)
 
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     date_birth = models.DateField(null=True)
     facebook_link = models.URLField(null=True)
@@ -64,18 +60,10 @@ class Custom(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'phone']
 
+    def get_user_community(self):
+        return self.community
+
     def __str__(self):
         return self.username
 
     objects = CustomAccountManager()
-
-
-# class CustomUser(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     # email = models.EmailField(unique=True)
-#     # phone = PhoneField(blank=True, help_text='Contact phone number')
-#     # photo = models.ImageField(upload_to='users/images')
-#     # first_name = models.CharField(max_length=30, null=True, blank=True)
-#     # last_name = models.CharField(max_length=30, null=True, blank=True)
-#     def __str__(self):
-#         return self.username
