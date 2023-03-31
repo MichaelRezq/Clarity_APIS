@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'users',
-
+    'jobs',
     'clarity',
     'posts',
     'comments',

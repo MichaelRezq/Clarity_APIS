@@ -26,6 +26,7 @@ import problems.api.urls
 # import solutions.api.urls
 import replays.api.urls
 import SocialAuthentication.urls
+import jobs.api.urls
 
 # from rest_framework import routers
 
@@ -48,4 +49,5 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('', include(SocialAuthentication.urls)),
+    path('',include(jobs.api.urls)),
 ]
