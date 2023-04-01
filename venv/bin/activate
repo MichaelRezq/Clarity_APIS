@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/media/michrezq/MICHAEL/Clarity_APIS/venv"
+VIRTUAL_ENV="/home/youssef/final-project/Clarity_APIS/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

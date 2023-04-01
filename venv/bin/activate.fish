@@ -30,7 +30,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/media/michrezq/MICHAEL/Clarity_APIS/venv"
+set -gx VIRTUAL_ENV "/home/youssef/final-project/Clarity_APIS/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
