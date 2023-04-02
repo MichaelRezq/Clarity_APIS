@@ -67,3 +67,10 @@ class Custom(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     objects = CustomAccountManager()
+
+
+class OnlineUser(models.Model):
+    user = models.OneToOneField(Custom, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username

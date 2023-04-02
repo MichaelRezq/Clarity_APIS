@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    
+    'channels',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,7 +68,8 @@ INSTALLED_APPS = [
     'problems',
     'replays',
     'community',
-    # 'solutions'
+    # 'solutions',
+    'chat',
     
 ]
 
@@ -86,7 +89,7 @@ SITE_ID = 1
 # allauth settings
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MyApp] '
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
@@ -190,13 +193,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'clarity.wsgi.application'
 
 
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
     'rest_framework.permissions.IsAuthenticated'
+    # 'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
     'rest_framework.authentication.TokenAuthentication',
@@ -270,6 +273,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -303,3 +315,16 @@ MEDIA_URL = '/media/'
 
 # email settings
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'michrezq@gmail.com'  # Replace with your email address
+EMAIL_HOST_PASSWORD = 'jogqdvtzwmsrwrhw'  # Replace with your email password
+
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 10  # Change to the desired number of attempts
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 3600  # Change to the desired number of seconds
+
+
+WSGI_APPLICATION = 'clarity.wsgi.application'
+ASGI_APPLICATION = 'clarity.asgi.application'

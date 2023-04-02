@@ -27,6 +27,7 @@ import community.api.urls
 import problems.api.urls
 # import solutions.api.urls
 import replays.api.urls
+import chat.api.urls
 import SocialAuthentication.urls
 from django.conf import settings
 from django.conf.urls.static import static
@@ -47,6 +48,7 @@ urlpatterns = [
     path('', include(community.api.urls)),
     path('', include(problems.api.urls)),
     # path('', include(solutions.api.urls)),
+    path('', include(chat.api.urls)),
     path('', include(replays.api.urls)),
     path('api_auth', include('rest_framework.urls')),
     path('api_token_auth', obtain_auth_token),
