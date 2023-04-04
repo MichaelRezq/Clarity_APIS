@@ -25,10 +25,14 @@ import users.api.urls
 import comments.api.urls
 import community.api.urls
 import problems.api.urls
+import ads.api.urls
 # import solutions.api.urls
 import replays.api.urls
 import chat.api.urls
 import SocialAuthentication.urls
+from django.conf import settings
+from django.conf.urls.static import static
+
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -44,6 +48,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(posts.api.urls)),
+    path('', include(ads.api.urls)),
     path('', include(comments.api.urls)),
     path('', include(community.api.urls)),
     path('', include(problems.api.urls)),
