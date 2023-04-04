@@ -30,11 +30,15 @@ import ads.api.urls
 import replays.api.urls
 import chat.api.urls
 import SocialAuthentication.urls
+<<<<<<< HEAD
 from django.conf import settings
 from django.conf.urls.static import static
 
 from django.conf import settings
 from django.conf.urls.static import static
+=======
+import jobs.api.urls
+>>>>>>> origin/ahmed
 
 # from rest_framework import routers
 
@@ -61,5 +65,6 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('', include(users.api.urls)),
     path('', include(SocialAuthentication.urls)),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('',include(jobs.api.urls)),
 
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

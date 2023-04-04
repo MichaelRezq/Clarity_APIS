@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github', # new
 
     'users',
-
+    'jobs',
     'clarity',
     'posts',
     'comments',
