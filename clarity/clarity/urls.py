@@ -23,9 +23,13 @@ from rest_framework.authtoken.views import obtain_auth_token
 import posts.api.urls
 import comments.api.urls
 import problems.api.urls
+import ads.api.urls
 # import solutions.api.urls
 import replays.api.urls
 import SocialAuthentication.urls
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 # from rest_framework import routers
 
@@ -39,6 +43,7 @@ import SocialAuthentication.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(posts.api.urls)),
+    path('', include(ads.api.urls)),
     path('', include(comments.api.urls)),
     path('', include(problems.api.urls)),
     # path('', include(solutions.api.urls)),
@@ -48,4 +53,4 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('', include(SocialAuthentication.urls)),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

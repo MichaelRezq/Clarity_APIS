@@ -9,11 +9,14 @@ class Problem(models.Model):
     description = models.TextField() # The main content of the problem
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='problems') # The author of the problem
     author_name = models.CharField(max_length=255)
+    body = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True) # The date and time the problem was created
     updated_at = models.DateTimeField(auto_now=True) # The date and time the problem was last updated
     image = models.ImageField(upload_to='media/problem_images/', null=True, blank=True) # An optional image for the problem
     tags = ArrayField(models.CharField(max_length=200), blank=True,null=True)
     community = models.CharField(max_length=255)
+    views = models.IntegerField(default=0) # The number of views for the problem
+
     # num_answer = models.IntegerField()
     def __str__(self):
         return self.title
@@ -28,6 +31,13 @@ class Problem(models.Model):
     @classmethod
     def total_problems(cls,community):
         return cls.objects.filter(community=community).count()
+
+    def increment_views(self, request):
+        session_key = 'view_problem_{}'.format(self.pk)
+        if not request.session.get(session_key, False):
+            self.views += 1
+            self.save()
+            request.session[session_key] = True
 
 class Solution(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)

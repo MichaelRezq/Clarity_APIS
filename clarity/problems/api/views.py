@@ -16,8 +16,15 @@ from rest_framework.response import Response
 
 
 @api_view(['GET', 'POST'])
-def get_post_problems(request):
+def get_post_problems(request,pk=None):
     # GET
+    if pk:
+        problem = get_object_or_404(Problem, pk=pk)
+        problem.views += 1
+        problem.save()
+        serializer = ProblemSerializer(problem)
+        return Response(serializer.data)
+
     if request.method == 'GET':
         query = request.query_params.get('q', '')
         problems = Problem.objects.filter(
@@ -65,6 +72,7 @@ def get_post_problems(request):
             'description': request.data['description'],
             'image': None,
             'tags': request.data['tags'],
+            'body': request.data['body'],
             'author': request.user.id,
             'author_name': request.user.username,
             'community': str(request.user.community),
@@ -96,8 +104,11 @@ def get_edit_delete_problem(request, pk):
     try:
         problem = Problem.objects.get(pk=pk)
         num_answers = problem.get_num_of_answer()
+        problem.increment_views(request)  # Increment views count for this problem
+
     except Problem:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
     # GET
     if request.method == 'GET':
         serializer = ProblemSerializer(problem)
@@ -248,24 +259,3 @@ class LikeView(APIView):
             solution.likes.add(user)
         return Response({'status': 'success'})
 
-
-
-
-
-
-
-
-
-# # List all posts or create a new post
-# class LikeListCreateView(generics.ListCreateAPIView):
-#     queryset = Like.objects.all()
-#     serializer_class = LikeSerializer
-#     def get(self,request):
-#         like = Like.objects.get(id=request.user.id)
-#         serializer = LikeSerializer(like)
-#         return Response(serializer.data)
-#
-# # Retrieve, update or delete a post instance
-# class LikeRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Like.objects.all()
-#     serializer_class = LikeSerializer

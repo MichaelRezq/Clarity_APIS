@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'problems',
     'replays',
     'community',
+    'ads'
     # 'solutions'
     
 ]
@@ -290,3 +291,6 @@ ACCOUNT_UNIQUE_EMAIL = True
 
 
 AUTH_USER_MODEL = 'users.Custom'
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT= BASE_DIR / 'media'

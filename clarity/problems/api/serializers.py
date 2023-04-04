@@ -12,7 +12,7 @@ class ProblemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Problem
-        fields = ('id','title','description','author','author_name','created_at','tags','community','get_num_of_answer')
+        fields = ('id','title','description','author','author_name','created_at','tags','community','get_num_of_answer','views','body')
 
     def get_num_of_answer(self,obj):
         return obj.get_num_of_answer
