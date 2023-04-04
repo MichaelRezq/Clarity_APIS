@@ -16,6 +16,9 @@ class Post(models.Model):
     video = models.FileField(upload_to='media/post_videos/', null=True, blank=True) # An optional video for the post
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_posts', null=True, blank=True) # A ManyToMany field that tracks which users have liked the post
     shared_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shared_posts', null=True, blank=True) # A ManyToMany field that tracks which users have shared the post
+    community=models.CharField(max_length=255)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes_Post')
+
 
     def __str__(self):
         return self.title

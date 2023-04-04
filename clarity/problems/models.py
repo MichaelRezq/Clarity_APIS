@@ -9,14 +9,20 @@ class Problem(models.Model):
     description = models.TextField() # The main content of the problem
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='problems') # The author of the problem
     author_name = models.CharField(max_length=255)
+<<<<<<< HEAD
     body = models.TextField(null=True, blank=True)
+=======
+>>>>>>> origin/dina
     created_at = models.DateTimeField(auto_now_add=True) # The date and time the problem was created
     updated_at = models.DateTimeField(auto_now=True) # The date and time the problem was last updated
     image = models.ImageField(upload_to='media/problem_images/', null=True, blank=True) # An optional image for the problem
     tags = ArrayField(models.CharField(max_length=200), blank=True,null=True)
     community = models.CharField(max_length=255)
+<<<<<<< HEAD
     views = models.IntegerField(default=0) # The number of views for the problem
 
+=======
+>>>>>>> origin/dina
     # num_answer = models.IntegerField()
     def __str__(self):
         return self.title
@@ -32,6 +38,7 @@ class Problem(models.Model):
     def total_problems(cls,community):
         return cls.objects.filter(community=community).count()
 
+<<<<<<< HEAD
     def increment_views(self, request):
         session_key = 'view_problem_{}'.format(self.pk)
         if not request.session.get(session_key, False):
@@ -39,6 +46,8 @@ class Problem(models.Model):
             self.save()
             request.session[session_key] = True
 
+=======
+>>>>>>> origin/dina
 class Solution(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem,on_delete=models.CASCADE)

@@ -106,7 +106,7 @@ def get_edit_delete_problem(request, pk):
         num_answers = problem.get_num_of_answer()
         problem.increment_views(request)  # Increment views count for this problem
 
-    except Problem:
+    except :
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     # GET
@@ -207,7 +207,7 @@ def get_edit_delete_solution(request, problemID,solutionID):
     try:
         problem = Problem.objects.get(pk=problemID)
         solution = Solution.objects.get(pk=solutionID)
-    except Problem:
+    except :
         return Response(status=status.HTTP_404_NOT_FOUND)
     # GET
     if request.method == 'GET':
