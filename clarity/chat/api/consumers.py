@@ -2,11 +2,11 @@ import json
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from chat.models import ChatRoom, ChatMessage
-from users.models import User, OnlineUser
+from users.models import Custom, OnlineUser
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	def getUser(self, userId):
-		return User.objects.get(id=userId)
+		return Custom.objects.get(id=userId)
 
 	def getOnlineUsers(self):
 		onlineUsers = OnlineUser.objects.all()
@@ -25,8 +25,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			pass
 
 	def saveMessage(self, message, userId, roomId):
-		userObj = User.objects.get(id=userId)
-		chatObj = ChatRoom.objects.get(roomId=roomId)
+		userObj = Custom.objects.get(id=userId)
+		chatObj = ChatRoom.objects.get(id=roomId)
 		chatMessageObj = ChatMessage.objects.create(
 			chat=chatObj, user=userObj, message=message
 		)
@@ -58,7 +58,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		)(ChatRoom.objects.filter(member=self.userId))
 		for room in self.userRooms:
 			await self.channel_layer.group_add(
-				room.roomId,
+				room.id,
 				self.channel_name
 			)
 		await self.channel_layer.group_add('onlineUser', self.channel_name)
@@ -72,7 +72,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.sendOnlineUserList()
 		for room in self.userRooms:
 			await self.channel_layer.group_discard(
-				room.roomId,
+				room.id,
 				self.channel_name
 			)
 

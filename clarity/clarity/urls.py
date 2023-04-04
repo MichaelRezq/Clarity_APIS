@@ -53,6 +53,7 @@ urlpatterns = [
     path('api_auth', include('rest_framework.urls')),
     path('api_token_auth', obtain_auth_token),
     path('rest-auth/', include('rest_auth.urls')),
+    path('', include('django.contrib.auth.urls')),
     path('', include(users.api.urls)),
     path('', include(SocialAuthentication.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

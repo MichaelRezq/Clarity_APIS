@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 INSTALLED_APPS = [
     
-    'channels',
+    'daphne',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,6 +90,8 @@ SITE_ID = 1
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION_SENT_REDIRECT_URL = 'http://localhost:3000/login'
+
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MyApp] '
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
@@ -328,3 +330,11 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 3600  # Change to the desired number of seconds
 
 WSGI_APPLICATION = 'clarity.wsgi.application'
 ASGI_APPLICATION = 'clarity.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
