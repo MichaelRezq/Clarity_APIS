@@ -30,15 +30,12 @@ import ads.api.urls
 import replays.api.urls
 import chat.api.urls
 import SocialAuthentication.urls
-<<<<<<< HEAD
 from django.conf import settings
 from django.conf.urls.static import static
 
 from django.conf import settings
 from django.conf.urls.static import static
-=======
 import jobs.api.urls
->>>>>>> origin/ahmed
 
 # from rest_framework import routers
 
