@@ -91,7 +91,7 @@ SITE_ID = 1
 # allauth settings
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_VERIFICATION_SENT_REDIRECT_URL = 'http://localhost:3000/login'
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
@@ -202,8 +202,8 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-    # 'rest_framework.permissions.IsAuthenticated'
-    'rest_framework.permissions.AllowAny'
+    'rest_framework.permissions.IsAuthenticated'
+    # 'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
     'rest_framework.authentication.TokenAuthentication',
@@ -224,8 +224,8 @@ DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'clarity',
-            'USER': 'michael',
-            'PASSWORD': 'root',
+            'USER': 'postgres',
+            'PASSWORD': '1512000',
             'HOST': 'localhost',
             'PORT': '5432',
         }

@@ -63,8 +63,8 @@ class Custom(AbstractBaseUser, PermissionsMixin):
     def get_user_community(self):
         return self.community
 
-    def __str__(self):
-        return self.username
+    # def __str__(self):
+    #     return self.username
 
     objects = CustomAccountManager()
 

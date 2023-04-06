@@ -79,7 +79,6 @@ def get_post_problems(request):
             'content': request.data['content'],
             'author': request.user.id,
             'community': str(request.user.community),
-           
         }
 
         serializer = PostSerializer(data=data)
