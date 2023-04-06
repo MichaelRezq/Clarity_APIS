@@ -36,6 +36,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.conf.urls.static import static
 import jobs.api.urls
+import events.api.urls
 
 # from rest_framework import routers
 
@@ -63,5 +64,6 @@ urlpatterns = [
     path('', include(users.api.urls)),
     path('', include(SocialAuthentication.urls)),
     path('',include(jobs.api.urls)),
+    path('',include(events.api.urls)),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

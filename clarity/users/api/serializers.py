@@ -12,7 +12,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     last_name = serializers.CharField(required=True)
     # community = serializers.CharField(required=True)
     community = serializers.PrimaryKeyRelatedField(queryset=Community.objects.all(), many=False)
-    photo=serializers.ImageField(required=True)
+    photo=serializers.ImageField(required=False)
     country=serializers.CharField(required=True)
     phone=serializers.CharField(required=True)
     @transaction.atomic
@@ -45,6 +45,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 from users.models import Custom
 
 class UserSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Custom
         fields = '__all__'

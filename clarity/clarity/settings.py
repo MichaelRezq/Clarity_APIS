@@ -70,8 +70,9 @@ INSTALLED_APPS = [
     'community',
     # 'solutions',
     'chat',
-    'ads'
-    # 'solutions'
+    'ads',
+    # 'solutions',
+    'events',
     
 ]
 
