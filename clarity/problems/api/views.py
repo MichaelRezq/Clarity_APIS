@@ -70,6 +70,7 @@ def get_post_problems(request,pk=None):
         data = {
             'title': request.data['title'],
             'description': request.data['description'],
+
             'image': None,
             'tags': request.data['tags'],
             'body': request.data['body'],
