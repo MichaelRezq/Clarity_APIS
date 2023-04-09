@@ -21,6 +21,10 @@ class EventPatchSerializer(serializers.ModelSerializer):
         model = Event
         fields = ['applied_by',]
 
+class EventPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
 class ApplyToEventSerializer(serializers.ModelSerializer):
     # author = UserSerializer()
     # applied_by = UserSerializer(many=True, read_only=True)

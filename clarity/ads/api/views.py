@@ -6,8 +6,8 @@ from rest_framework import request, status, viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 
-from ads.models import  Ads
-from .serializers import  AdsSerializer
+from ads.models import  Ads,Review
+from .serializers import  AdsSerializer,ReviewSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -19,7 +19,7 @@ def get_post_ads(request):
         query_search = request.query_params.get('search', '')
 
         ads = Ads.objects.filter(
-            Q(type__icontains=query_type) )
+            Q(type__icontains=query_type) , Q(name__icontains=query_search)| Q(description__icontains=query_search) )
             # community=request.user.community).order_by('-id')
         pwd = os.getcwd()
         if ads:
@@ -51,7 +51,7 @@ def get_post_ads(request):
             'country': request.data['country'],
             'region': request.data['region'],
             'street': request.data['street'],
-            'services': request.data['services'],
+            'services': request.data.getlist('services'),
             'author': request.user.id,
         }
 
@@ -123,3 +123,45 @@ def get_edit_delete_ads(request, pk):
             'message': 'Ads Deleted Successfully',
         }
         return Response(res, status=status.HTTP_204_NO_CONTENT)
+
+# view functions for rate and review
+@api_view(['POST'])
+def add_review(request, pk):
+    try:
+        ad = Ads.objects.get(pk=pk)
+    except:
+        return Response({'error': 'Ad not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    data = {
+        "ad":pk,
+        "user":request.user.id,
+        "rating":request.data['rating'],
+        "comment": request.data['comment'],
+    }
+
+    # check if the user has already reviewed the ad
+    if Review.objects.filter(ad=ad, user=request.user).exists():
+        return Response({'error': 'You have already reviewed this ad'}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = ReviewSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+
+        # update ad total_ratings and total_stars fields
+        ad.total_ratings = Review.objects.filter(ad=ad).count()
+        ad.total_stars += serializer.validated_data['rating']
+        ad.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def update_review(request, pk):
+    try:
+        review = Review.objects.get(pk=pk)
+    except:
+        return Response({'error': 'Review not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ReviewSerializer(review, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()

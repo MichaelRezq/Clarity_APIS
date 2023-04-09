@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 from problems.models import  Problem,Solution\
     # ,Like
-from .serializers import  ProblemSerializer,SolutionSerializer\
+from .serializers import  ProblemSerializer,SolutionSerializer,ProblemSerializerGet,SolutionSerializerGet
     # ,LikeSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -18,19 +18,19 @@ from rest_framework.response import Response
 @api_view(['GET', 'POST'])
 def get_post_problems(request,pk=None):
     # GET
-    if pk:
-        problem = get_object_or_404(Problem, pk=pk)
-        problem.views += 1
-        problem.save()
-        serializer = ProblemSerializer(problem)
-        return Response(serializer.data)
+    # if pk:
+    #     problem = get_object_or_404(Problem, pk=pk)
+    #     problem.views += 1
+    #     problem.save()
+    #     serializer = ProblemSerializer(problem)
+    #     return Response(serializer.data)
 
     if request.method == 'GET':
         query = request.query_params.get('q', '')
         problems = Problem.objects.filter(
             Q(title__icontains=query) | Q(description__icontains=query),
             community=request.user.community
-        ).order_by('-id')
+        ).select_related('author').order_by('-id')
         total_answer = Solution.total_solution(request.user.community)
         total_problems = Problem.total_problems(request.user.community)
         tags = []
@@ -39,7 +39,7 @@ def get_post_problems(request,pk=None):
             tags.append(p.tags)
         unique_tags = list(set([item for sublist in tags for item in sublist]))
         if problems:
-            serializer = ProblemSerializer(problems, many=True)
+            serializer = ProblemSerializerGet(problems, many=True)
             res = {
                 'api_status': 'true',
                 'message': 'Problems Fetched Successfully',
@@ -66,10 +66,11 @@ def get_post_problems(request,pk=None):
         # community = request.user.community
         # problem = Problem.objects.create(title=title,description=desc,author=author,tags=tags,community=community)
         # serializer = ProblemSerializer(problem,many=False)
-
+        print('========================',request.user.id)
         data = {
             'title': request.data['title'],
             'description': request.data['description'],
+
             'image': None,
             'tags': request.data['tags'],
             'body': request.data['body'],
@@ -111,7 +112,7 @@ def get_edit_delete_problem(request, pk):
 
     # GET
     if request.method == 'GET':
-        serializer = ProblemSerializer(problem)
+        serializer = ProblemSerializerGet(problem)
         res = {
             'api_status': 'true',
             'message': 'Problem Fetched Successfully',
@@ -122,13 +123,15 @@ def get_edit_delete_problem(request, pk):
 
     # PUT
     elif request.method == 'PUT':
-        data={
+        data = {
             'title': request.data['title'],
-            'description':  request.data['description'],
+            'description': request.data['description'],
             'image': None,
             'tags': request.data['tags'],
+            'body': request.data['body'],
             'author': request.user.id,
-            'community':str(request.user.community)
+            'author_name': request.user.username,
+            'community': str(request.user.community),
         }
 
         serializer = ProblemSerializer(problem, data=data)
@@ -158,7 +161,7 @@ def get_post_solution(request,problemID):
     if request.method == 'GET':
         solutions = Solution.objects.filter(problem=problem)
         if solutions:
-            serializer = SolutionSerializer(solutions, many=True)
+            serializer = SolutionSerializerGet(solutions, many=True)
             res = {
                 'api_status': 'true',
                 'message': 'Solutions Fetched Successfully',

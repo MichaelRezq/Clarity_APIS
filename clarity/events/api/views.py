@@ -1,6 +1,6 @@
 from rest_framework import generics, filters, permissions
 from events.models import Event,ApplyToEvent
-from .serializers import EventSerializer,ApplyToEventSerializer,EventPatchSerializer
+from .serializers import EventSerializer,ApplyToEventSerializer,EventPatchSerializer,EventPostSerializer
 from posts.api.views import CustomPagination
 from permissions import IsAutherOrReadOnly
 from rest_framework.response import Response
@@ -11,15 +11,15 @@ from users.models import Custom
 
 # List all Events or create a new Event
 class EventListCreateView(generics.ListCreateAPIView):
-    serializer_class = EventSerializer
+    serializer_class = EventPostSerializer
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['content','title']  # Specify the fields to search
 
     def get_queryset(self):
+        self.serializer_class = EventSerializer
         user_community = self.request.user.community
         return Event.objects.filter(community=user_community)
-
 # Retrieve, update or delete a Event instance
 class EventRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
@@ -29,6 +29,7 @@ class EventRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         self.serializer_class = EventPatchSerializer
         event = self.get_object() # Get the Event object to modify
+        print("-------------------------event----------------",event)
         user_id = request.data.get('user_id') # Get the user id to remove
         print('----------in Patch fun--event---------',event.applied_by.all())
         
@@ -41,7 +42,7 @@ class EventRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
                     print("-----------the user is trying to un apply to an event----------------")
 
                     event.applied_by.remove(user) # Remove the user from the applied_by field
-                    return Response(status=status.HTTP_200_OK)
+                    return Response({'success': 'the user is removed to the appliedby filed'},status=status.HTTP_200_OK)
                 except :
                     return Response({'error': 'error during deleting the user'}, status=status.HTTP_400_BAD_REQUEST)
                     # for adding a user
@@ -52,7 +53,7 @@ class EventRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
                     user = Custom.objects.get(id=user_id)
                     print("-----------user----------------",user)
                     event.applied_by.add(user) # add the user from the applied_by field
-                    return Response(status=status.HTTP_200_OK)
+                    return Response({'success': 'the user is added to the appliedby filed'},status=status.HTTP_200_OK)
                 except :
                     return Response({'error': 'error during adding the user'}, status=status.HTTP_400_BAD_REQUEST)
         
