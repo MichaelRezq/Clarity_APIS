@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     'problems',
     'replays',
     'community',
-    # 'solutions',
+    'about',
     'chat',
     'ads',
     # 'solutions',

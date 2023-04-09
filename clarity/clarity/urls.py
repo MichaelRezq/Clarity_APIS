@@ -26,7 +26,7 @@ import comments.api.urls
 import community.api.urls
 import problems.api.urls
 import ads.api.urls
-# import solutions.api.urls
+import about.api.urls
 import replays.api.urls
 import chat.api.urls
 import SocialAuthentication.urls
@@ -54,7 +54,7 @@ urlpatterns = [
     path('', include(comments.api.urls)),
     path('', include(community.api.urls)),
     path('', include(problems.api.urls)),
-    # path('', include(solutions.api.urls)),
+    path('', include(about.api.urls)),
     path('', include(chat.api.urls)),
     path('', include(replays.api.urls)),
     path('api_auth', include('rest_framework.urls')),
