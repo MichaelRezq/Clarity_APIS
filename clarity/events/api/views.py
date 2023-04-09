@@ -30,7 +30,8 @@ class EventRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         self.serializer_class = EventPatchSerializer
         event = self.get_object() # Get the Event object to modify
         print("-------------------------event----------------",event)
-        user_id = request.data.get('user_id') # Get the user id to remove
+        user_id = request.user.id# Get the user id to remove
+        print('----------------------user id ---------------------',user_id)
         print('----------in Patch fun--event---------',event.applied_by.all())
         
         if user_id is not None:
