@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import BaseAuthentication,TokenAuthentication
 from permissions import IsAutherOrReadOnly
 from posts.models import Post
-from .serializers import PostSerializer
+from .serializers import PostSerializer,PostSerializerForGet
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,7 +13,7 @@ from rest_framework.decorators import APIView
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
 from comments.models import Comment
-from comments.api.serializers import CommentSerializer
+from comments.api.serializers import CommentSerializer,CommentSerializerForGet
 
 
 
@@ -46,7 +46,8 @@ class CustomPagination(PageNumberPagination):
 
 
 @api_view(['GET', 'POST'])
-def get_post_problems(request):
+def get_post_problems(request,pk=None):
+    
     # GET
     if request.method == 'GET':
         query = request.query_params.get('q', '')
@@ -56,17 +57,18 @@ def get_post_problems(request):
         ).order_by('-id')
 
         if posts:
-            serializer = PostSerializer(posts, many=True)
+            serializer = PostSerializerForGet(posts, many=True)
             res = {
                 'api_status': 'true',
                 'message': 'Posts Fetched Successfully',
                 'data': serializer.data,
             }
+            # print(res)
             return Response(res,status=status.HTTP_200_OK)
         else:
             res = {
                 'api_status': 'false',
-                'message': 'error in fetching problems',
+                'message': 'error in fetching posts',
             }
             return Response(res, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -74,15 +76,15 @@ def get_post_problems(request):
 
     elif request.method == 'POST':
 
-        data = {
-            'title':request.data['title'],
-            'content': request.data['content'],
-            'author': request.user.id,
-            'community': str(request.user.community),
-           
-        }
+        # data = {
+        #     'title':request.data['title'],
+        #     'content': request.data['content'],
+        #     
+        #     'author': request.user.id,
+        #     'community': str(request.user.community),
+        # }
 
-        serializer = PostSerializer(data=data)
+        serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             res = {
@@ -104,8 +106,8 @@ def get_post_problems(request):
 @api_view(['GET','PUT','DELETE'])
 def get_spesific_post(request, pk):
     try:
-        post = Post.objects.get(pk=pk)
-    except Post.DoesNotExists:
+        post = Post.objects.get(id=pk)
+    except :
         return Response(status=status.HTTP_404_NOT_FOUND)
     # GET
     if request.method == 'GET':
@@ -114,14 +116,13 @@ def get_spesific_post(request, pk):
         
     # PUT
     elif request.method == 'PUT':
-        data = {
-            'title':request.data['title'],
-            'content': request.data['content'],
-            'author': request.user.id,
-            'community': str(request.user.community),
+        # data = {
+        #     'content': request.data['content'],
+        #     'author': request.user.id,
+        #     'community': str(request.user.community),
           
-        }
-        serializer = PostSerializer(data=data)
+        # }
+        serializer = PostSerializer(instance=post,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -129,19 +130,64 @@ def get_spesific_post(request, pk):
     # DELETE
     if request.method == 'DELETE':
         post.delete()
-        return Response(status= status.HTTP_204_NO_CONTENT)
+        return Response({'sucsess': f'{request.user.username} Your Post Deleted successfully' },status= status.HTTP_204_NO_CONTENT)
     
 
 class LikeView(APIView):
-    permission_classes = (permissions.IsAuthenticated)
+    # permission_classes = (permissions.IsAuthenticated)
     def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
+        print("---------user-----",post_id)
         user = request.user
+        print("---------user-----",user)
+
+        post = get_object_or_404(Post, id=post_id)
+
+        print("---------post.likes.all()-----",post.likes.all())
         if user in post.likes.all():
             post.likes.remove(user)
+            return Response({'sucsess': f'like removed by  {request.user.username}' },status=status.HTTP_200_OK)
         else:
             post.likes.add(user)
-        return Response({'status': 'success'})
+            return Response({'sucsess': f'like added by  {request.user.username}'}, status=status.HTTP_200_OK)
+
+class ShareView(APIView):
+    # permission_classes = (permissions.IsAuthenticated)
+    def post(self, request, post_id):
+
+        print("---------user-----",post_id)
+        user = request.user
+        print("---------user-----",user)
+
+        post = get_object_or_404(Post, id=post_id)
+        # 1 add the user to the field of the sharedby
+        post.shared_by.add(user)
+
+        # 2 add the post to the user who share
+        post_shared=Post.objects.get(id=post_id)
+        print("-----------------post image -------------",post_shared.image)
+        
+
+        data = {
+            'content': post_shared.content,
+            'author': request.user.id,
+            'community': str(request.user.community),
+            'title':'null',
+        }
+        if post_shared.image:
+            data['image'] = post_shared.image
+            print("``````````````````````````````````hello form test for youssef")
+        if post_shared.video:
+            data['video'] = post_shared.video
+        serializer = PostSerializer(data=data)
+        print("data---------------------------------------",data)
+        if serializer.is_valid():
+            serializer.save()
+            # return Response(serializer.data)
+            return Response({'sucsess': f'{request.user.username} You Shared The POst Successfully'}, status=status.HTTP_200_OK)
+
+
+
+        return Response({'sucsess': f'{request.user.username} You Shared The POst Successfully'}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])
@@ -152,10 +198,10 @@ def get_post_comment(request,postid):
     if request.method == 'GET':
         comments = Comment.objects.filter(post=post)
         if comments:
-            serializer = CommentSerializer(comments, many=True)
+            serializer = CommentSerializerForGet(comments, many=True)
             res = {
                 'api_status': 'true',
-                'message': 'Comment added  Successfully',
+                'message': 'Comment fetched  Successfully',
                 'data': serializer.data
             }
             return Response(res,status=status.HTTP_200_OK)
@@ -169,9 +215,9 @@ def get_post_comment(request,postid):
     # # POST
     elif request.method == 'POST':
         data = {
-            'user': request.user.id,
+            'author': request.user.id,
             'post': post.id,
-            'comment': request.data['comment'],
+            'content': request.data['content'],
             'community': str(request.user.community),
 
         }
@@ -215,10 +261,10 @@ def get_edit_delete_comment(request, postid,commentid):
     # PUT
     elif request.method == 'PUT':
         data = {
-            'user': request.user.id,
+            'author': request.user.id,
             'post': post.id,
-            'comment': request.data['comment'],
-
+            'content': request.data['content'],
+            'community': str(request.user.community),
         }
 
         serializer = CommentSerializer(comment, data=data)

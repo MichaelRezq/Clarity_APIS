@@ -7,8 +7,8 @@ from django .conf import settings
 from rest_framework.authtoken.models import Token
 
 class Post(models.Model):
-    title = models.CharField(max_length=255) # The title of the post
-    content = models.TextField() # The main content of the post
+    title = models.CharField(max_length=255,null=True,blank=True) # The title of the post
+    content = models.TextField(null=True) # The main content of the post
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts') # The author of the post
     created_at = models.DateTimeField(auto_now_add=True) # The date and time the post was created
     updated_at = models.DateTimeField(auto_now=True) # The date and time the post was last updated
@@ -17,11 +17,10 @@ class Post(models.Model):
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_posts', null=True, blank=True) # A ManyToMany field that tracks which users have liked the post
     shared_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shared_posts', null=True, blank=True) # A ManyToMany field that tracks which users have shared the post
     community=models.CharField(max_length=255)
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes_Post')
 
 
-    def __str__(self):
-        return self.title
+    # def __str__(self):
+    #     return self.title
 
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.pk}) # Returns the URL to the detail view of the post

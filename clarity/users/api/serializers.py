@@ -4,7 +4,7 @@ from rest_framework import serializers
 from django.db import transaction
 from django.conf import settings
 from chat.models import ChatRoom
-
+from community.api.serializers import CommunitySerializer
 from community.models import Community
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -51,3 +51,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UserSerializerForGet(serializers.ModelSerializer):
+    community=CommunitySerializer()
+    class Meta:
+        model = Custom
+        fields = '__all__'

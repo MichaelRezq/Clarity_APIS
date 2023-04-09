@@ -88,13 +88,11 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # output emails to console for testing
-
 # allauth settings
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_VERIFICATION_SENT_REDIRECT_URL = 'http://localhost:3000/login'
-
+ACCOUNT_EMAIL_VERIFICATION_REDIRECT_URL = '/verified-email-redirect/'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MyApp] '
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5

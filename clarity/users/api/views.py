@@ -3,7 +3,7 @@ from rest_auth.registration.views import RegisterView
 from users.models import Custom
 
 from posts.api.views import CustomPagination 
-from .serializers import CustomRegisterSerializer, UserSerializer
+from .serializers import CustomRegisterSerializer, UserSerializer,UserSerializerForGet
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
@@ -45,6 +45,7 @@ from rest_framework.exceptions import AuthenticationFailed
 class UserDetailView(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer()
 
     def get(self, request):
         try:
@@ -54,7 +55,14 @@ class UserDetailView(APIView):
             UserModel = Custom
             user_obj = UserModel.objects.get(id=user[0].id)
             # user_obj is the authenticated user object
-            serializer = UserSerializer(user_obj)
+            serializer = UserSerializerForGet(user_obj)
             return Response(serializer.data)
         except AuthenticationFailed:
             return Response({'error': 'Invalid token'})
+        
+
+from django.shortcuts import redirect
+
+def verified_email_redirect(request):
+    # redirect to the desired URL after successful email verification
+    return redirect('/my/custom/http://localhost:3000/')
