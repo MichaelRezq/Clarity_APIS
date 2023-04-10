@@ -3,13 +3,11 @@ from rest_auth.registration.views import RegisterView
 from users.models import Custom
 
 from posts.api.views import CustomPagination 
-from .serializers import CustomRegisterSerializer, UserSerializer,UserSerializerForGet
+from .serializers import CustomRegisterSerializer, UserSerializer,UserSerializerForGet,UserSerializerFOrPut
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework import generics, filters
+from rest_framework import generics, filters,status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import BaseAuthentication,TokenAuthentication
-from permissions import IsAutherOrReadOnly
-
+from rest_framework.authentication import TokenAuthentication
 
 class CustomRegisterView(RegisterView):
     serializer_class = CustomRegisterSerializer
@@ -24,17 +22,26 @@ class UserListCreateView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'content']  # Specify the fields to search
-    ordering_fields = ['title', 'created_at']  # Specify the fields to order by
-    # authentication_classes=[TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+    search_fields = ['first_name', 'username','last_name']  # Specify the fields to search
+    ordering_fields = [ 'first_name']  # Specify the fields to order by
 
 # Retrieve, update or delete a post instance
 class UsertRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Custom.objects.all()
     serializer_class = UserSerializer
-    # authentication_classes=[TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        self.serializer_class = UserSerializerFOrPut
+        user = self.get_object() # Get the Event object to modify
+        print("-------------------------event----------------",user)
+        user_id = request.user.id# Get the user id to remove
+        print('----------------------user id ---------------------',user_id)
+         #Update the user object with the data provided in the request
+        serializer = self.serializer_class(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'success': 'the user updated the profile successfully'},status=status.HTTP_200_OK)
+
 
 from rest_framework.views import APIView
 from rest_framework.response import Response

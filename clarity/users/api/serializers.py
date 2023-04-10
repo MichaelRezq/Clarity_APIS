@@ -49,6 +49,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Custom
         fields = '__all__'
+class UserSerializerFOrPut(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Custom
+        fields = ['username','first_name','last_name','phone','facebook_link','country','photo','date_birth']
 
 
 class UserSerializerForGet(serializers.ModelSerializer):

@@ -11,7 +11,7 @@ from .views import CustomRegisterView ,UserListCreateView,UsertRetrieveUpdateDel
 urlpatterns = [
     path('userdetail/', UserDetailView.as_view(), name='userdetail'),
     path('users/', UserListCreateView.as_view(), name='user_list'),
-    path('posts/<int:pk>/', UsertRetrieveUpdateDeleteView.as_view(), name='user_details'),
+    path('users/<int:pk>/', UsertRetrieveUpdateDeleteView.as_view(), name='user_details'),
     path('rest-auth/registration/', CustomRegisterView.as_view(), name='account_signup'),
 
     path(r'^confirm-email/(?P<key>[-:\w]+)/$',ConfirmEmailView.as_view(), name='account_confirm_email'),
