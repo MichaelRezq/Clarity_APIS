@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, UserManager, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
+from clarity import settings
 
 from community.models import Community
 
@@ -46,14 +47,19 @@ class Custom(AbstractBaseUser, PermissionsMixin):
                               null=False, max_length=150, unique=True)
     phone = models.CharField(verbose_name="phone", null=True, validators=[
                              phone_regex], max_length=14)
-    photo = models.ImageField(verbose_name="photo", upload_to='users/images',null=True,blank=True)
-    community = models.ForeignKey(Community, on_delete=models.SET_NULL,null=True,blank=True)
-
+    photo = models.ImageField(verbose_name="photo",
+                              upload_to='users/images', null=True, blank=True)
+    cover_photo = models.ImageField(verbose_name="photo",
+                              upload_to='users/images', null=True, blank=True)
+    community = models.ForeignKey(
+        Community, on_delete=models.SET_NULL, null=True, blank=True)
+    friends = models.ManyToManyField(settings.AUTH_USER_MODEL)
     is_active = models.BooleanField(default=True)
-
+    bio = models.CharField(max_length=700,null=True,blank=True)
     date_birth = models.DateField(null=True)
     facebook_link = models.URLField(null=True)
     country = models.CharField(max_length=50, null=True)
+    job_title = models.CharField(max_length=50, null=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
@@ -74,3 +80,15 @@ class OnlineUser(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class FriendRequest(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_friend_requests')
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_friend_requests')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined')
+    )
+    status = models.CharField(choices=STATUS_CHOICES, default='pending', max_length=10)

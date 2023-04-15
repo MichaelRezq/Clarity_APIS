@@ -6,12 +6,21 @@ from rest_auth.registration.views import VerifyEmailView
 from rest_auth.views import PasswordResetView, PasswordResetConfirmView,LoginView
 
 
-from .views import CustomRegisterView ,UserListCreateView,UsertRetrieveUpdateDeleteView,UserDetailView
+from .views import CustomRegisterView ,UserListCreateView,UsertRetrieveUpdateDeleteView,UserDetailView, change_password
+
+from .views import (
+    FriendRequestListCreateAPIView,
+    FriendRequestDetailAPIView,
+    FriendRequestPendingAPIView,
+    FriendRequestAcceptAPIView,
+    FriendRequestDeclineAPIView,
+)
 
 urlpatterns = [
     path('userdetail/', UserDetailView.as_view(), name='userdetail'),
     path('users/', UserListCreateView.as_view(), name='user_list'),
     path('users/<int:pk>/', UsertRetrieveUpdateDeleteView.as_view(), name='user_details'),
+    path('api/changepassword', change_password, name='change_password'),
     path('rest-auth/registration/', CustomRegisterView.as_view(), name='account_signup'),
 
     path(r'^confirm-email/(?P<key>[-:\w]+)/$',ConfirmEmailView.as_view(), name='account_confirm_email'),
@@ -30,4 +39,11 @@ urlpatterns = [
 
     path('user/password/reset/confirm/<Uid>/<token>/',PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
 
+# for friends
+
+    path('', FriendRequestListCreateAPIView.as_view(), name='list_create'),
+    path('<int:pk>/', FriendRequestDetailAPIView.as_view(), name='detail'),
+    path('pending/', FriendRequestPendingAPIView.as_view(), name='pending'),
+    path('<int:pk>/accept/', FriendRequestAcceptAPIView.as_view(), name='accept'),
+    path('<int:pk>/decline/', FriendRequestDeclineAPIView.as_view(), name='decline'),
     ]

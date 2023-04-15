@@ -7,8 +7,8 @@ from .serializers import ChatRoomSerializer, ChatMessageSerializer
 from chat.models import ChatRoom, ChatMessage
 
 class ChatRoomView(APIView):
-	def get(self, request,userId):
-		print('--------------------userId from ChatRoomView ---------',userId)
+	def get(self, request):
+		# print('--------------------userId from ChatRoomView ---------',userId)
 		chatRooms = ChatRoom.objects.filter(member=1)
 		serializer = ChatRoomSerializer(
 			chatRooms, many=True, context={"request": request}

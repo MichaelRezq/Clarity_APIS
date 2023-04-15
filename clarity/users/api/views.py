@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from requests import Response
 from rest_auth.registration.views import RegisterView
 from users.models import Custom
@@ -73,3 +74,99 @@ from django.shortcuts import redirect
 def verified_email_redirect(request):
     # redirect to the desired URL after successful email verification
     return redirect('/my/custom/http://localhost:3000/')
+
+
+
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def change_password(request):
+    if request.method == 'POST':
+        print(request.POST)
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        user = TokenAuthentication().authenticate(request)
+        UserModel = Custom
+        user_obj = UserModel.objects.get(id=user[0].id)
+        # user_obj is the authenticated user object
+        serializer = UserSerializerForGet(user_obj)
+        print(serializer.data)
+        print(user[1])
+        # user = authenticate(username=request.user.username, password=current_password)
+        print('=======================',current_password)
+        if user is None:
+            return JsonResponse({'error': 'Current password is incorrect.'}, status=400)
+        if new_password != confirm_password:
+            return JsonResponse({'error': 'New password and confirmation do not match.'}, status=400)
+        # user.set_password(new_password)
+        # user.save()
+        return JsonResponse({'message': 'Password updated successfully.'}, status=200)
+
+
+#---------------------------- friends--------------------------------
+# send friend request
+from django.contrib.auth.models import User
+from rest_framework import generics, mixins, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from ..models import FriendRequest
+from .serializers import FriendRequestSerializer
+
+class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = FriendRequestSerializer
+
+    def get_queryset(self):
+        return FriendRequest.objects.filter(sender=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(sender=self.request.user)
+
+class FriendRequestDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = FriendRequest.objects.all()
+    serializer_class = FriendRequestSerializer
+
+class FriendRequestPendingAPIView(generics.ListAPIView):
+    serializer_class = FriendRequestSerializer
+
+    def get_queryset(self):
+        return FriendRequest.objects.filter(recipient=self.request.user, status='pending')
+
+class FriendRequestAcceptAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
+    queryset = FriendRequest.objects.all()
+    serializer_class = FriendRequestSerializer
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        friend_request = self.get_object()
+        friend_request.status = 'accepted'
+        friend_request.save()
+        serializer = self.get_serializer(friend_request)
+        return Response(serializer.data)
+
+class FriendRequestDeclineAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
+    queryset = FriendRequest.objects.all()
+    serializer_class = FriendRequestSerializer
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        friend_request = self.get_object()
+        friend_request.status = 'declined'
+        friend_request.save()
+        serializer = self.get_serializer(friend_request)
+        return Response(serializer.data)

@@ -53,7 +53,7 @@ class UserSerializerFOrPut(serializers.ModelSerializer):
     
     class Meta:
         model = Custom
-        fields = ['username','first_name','last_name','phone','facebook_link','country','photo','date_birth']
+        fields = ['username','first_name','last_name','phone','facebook_link','country','photo','date_birth','cover_photo','job_title','bio']
 
 
 class UserSerializerForGet(serializers.ModelSerializer):
@@ -61,3 +61,14 @@ class UserSerializerForGet(serializers.ModelSerializer):
     class Meta:
         model = Custom
         fields = '__all__'
+
+from rest_framework import serializers
+from users.models import FriendRequest
+
+class FriendRequestSerializer(serializers.ModelSerializer):
+    sender = serializers.ReadOnlyField(source='sender.username')
+    recipient = serializers.ReadOnlyField(source='recipient.username')
+
+    class Meta:
+        model = FriendRequest
+        fields = ('id', 'sender', 'recipient', 'timestamp', 'status')
