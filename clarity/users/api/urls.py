@@ -41,9 +41,9 @@ urlpatterns = [
 
 # for friends
 
-    path('', FriendRequestListCreateAPIView.as_view(), name='list_create'),
-    path('<int:pk>/', FriendRequestDetailAPIView.as_view(), name='detail'),
-    path('pending/', FriendRequestPendingAPIView.as_view(), name='pending'),
-    path('<int:pk>/accept/', FriendRequestAcceptAPIView.as_view(), name='accept'),
-    path('<int:pk>/decline/', FriendRequestDeclineAPIView.as_view(), name='decline'),
+    path('friendsrequest/', FriendRequestListCreateAPIView.as_view(), name='list_create'),
+    path('friendsrequest/<int:pk>/', FriendRequestDetailAPIView.as_view(), name='detail'),
+    path('friendsrequest/pending/', FriendRequestPendingAPIView.as_view(), name='pending'),
+    path('friendsrequest/<int:pk>/accept/', FriendRequestAcceptAPIView.as_view(), name='accept'),
+    path('friendsrequest/<int:pk>/decline/', FriendRequestDeclineAPIView.as_view(), name='decline'),
     ]

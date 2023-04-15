@@ -83,30 +83,30 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 
-@csrf_exempt
-@api_view(['GET', 'POST'])
-def change_password(request):
-    if request.method == 'POST':
-        print(request.POST)
-        current_password = request.POST.get('current_password')
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
-        user = TokenAuthentication().authenticate(request)
-        UserModel = Custom
-        user_obj = UserModel.objects.get(id=user[0].id)
-        # user_obj is the authenticated user object
-        serializer = UserSerializerForGet(user_obj)
-        print(serializer.data)
-        print(user[1])
-        # user = authenticate(username=request.user.username, password=current_password)
-        print('=======================',current_password)
-        if user is None:
-            return JsonResponse({'error': 'Current password is incorrect.'}, status=400)
-        if new_password != confirm_password:
-            return JsonResponse({'error': 'New password and confirmation do not match.'}, status=400)
-        # user.set_password(new_password)
-        # user.save()
-        return JsonResponse({'message': 'Password updated successfully.'}, status=200)
+# @csrf_exempt
+# @api_view(['GET', 'POST'])
+# def change_password(request):
+#     if request.method == 'POST':
+#         print(request.POST)
+#         current_password = request.POST.get('current_password')
+#         new_password = request.POST.get('new_password')
+#         confirm_password = request.POST.get('confirm_password')
+#         user = TokenAuthentication().authenticate(request)
+#         UserModel = Custom
+#         user_obj = UserModel.objects.get(id=user[0].id)
+#         # user_obj is the authenticated user object
+#         serializer = UserSerializerForGet(user_obj)
+#         print(serializer.data)
+#         print(user[1])
+#         # user = authenticate(username=request.user.username, password=current_password)
+#         print('=======================',current_password)
+#         if user is None:
+#             return JsonResponse({'error': 'Current password is incorrect.'}, status=400)
+#         if new_password != confirm_password:
+#             return JsonResponse({'error': 'New password and confirmation do not match.'}, status=400)
+#         # user.set_password(new_password)
+#         # user.save()
+#         return JsonResponse({'message': 'Password updated successfully.'}, status=200)
 
 
 #---------------------------- friends--------------------------------
@@ -170,3 +170,27 @@ class FriendRequestDeclineAPIView(mixins.UpdateModelMixin, generics.GenericAPIVi
         friend_request.save()
         serializer = self.get_serializer(friend_request)
         return Response(serializer.data)
+
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.contrib.auth import authenticate
+
+@api_view(['POST'])
+def change_password(request):
+    print(request)
+
+    user = request.user
+    old_password = request.data.get('old_password')
+    print('old_password',old_password)
+    new_password = request.data.get('new_password')
+    print('new_password',new_password)
+
+    # if not authenticate(id=user.id, password=old_password):
+    #     print('old password---------------------',user.password)
+    #     return Response({'error': 'Incorrect old password.'}, status=400)
+    user.set_password(new_password)
+    user.save()
+
+    return Response({'success': 'Password updated successfully.'}, status=200)
