@@ -185,7 +185,7 @@ ROOT_URLCONF = 'clarity.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -226,8 +226,8 @@ DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'clarity',
-            'USER': 'michael',
-            'PASSWORD': 'root',
+            'USER': 'postgres',
+            'PASSWORD': '1512000',
             'HOST': 'localhost',
             'PORT': '5432',
         }
